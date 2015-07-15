@@ -4,7 +4,8 @@
             [picture-gallery.routes.home :refer [home-routes]]
             [noir.util.middleware :as noir-middleware]
             [picture-gallery.models.schema :as schema]
-            [migratus.core :as migratus]))
+            [migratus.core :as migratus]
+            [picture-gallery.routes.auth :refer [auth-routes]]))
 
 (defn init []
   (println "picture-gallery is starting"))
@@ -17,4 +18,7 @@
   (route/resources "/")
   (route/not-found "Not Found"))
 
-(def app (noir-middleware/app-handler [home-routes app-routes]))
+(def app (noir-middleware/app-handler
+           [auth-routes
+            home-routes
+            app-routes]))

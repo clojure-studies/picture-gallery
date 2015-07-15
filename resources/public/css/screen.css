@@ -8,3 +8,19 @@ h1 {
     text-align: center;
 }
 
+body {
+  background-color: #fff;
+  color: #555;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+}
+h1 {
+  text-align: center;
+}
+label {
+  width:150px;
+  float:left;
+}
+.error {
+  color: red;
+}
