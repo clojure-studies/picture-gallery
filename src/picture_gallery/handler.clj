@@ -1,14 +1,14 @@
 (ns picture-gallery.handler
-  (:require [compojure.core :refer [defroutes routes]]
-            [ring.middleware.resource :refer [wrap-resource]]
-            [ring.middleware.file-info :refer [wrap-file-info]]
-            [hiccup.middleware :refer [wrap-base-url]]
-            [compojure.handler :as handler]
+  (:require [compojure.core :refer [defroutes]]
             [compojure.route :as route]
-            [picture-gallery.routes.home :refer [home-routes]]))
+            [picture-gallery.routes.home :refer [home-routes]]
+            [noir.util.middleware :as noir-middleware]
+            [picture-gallery.models.schema :as schema]
+            [migratus.core :as migratus]))
 
 (defn init []
   (println "picture-gallery is starting"))
+  (migratus/migrate schema/migratus-cfg)
 
 (defn destroy []
   (println "picture-gallery is shutting down"))
@@ -17,7 +17,4 @@
   (route/resources "/")
   (route/not-found "Not Found"))
 
-(def app
-  (-> (routes home-routes app-routes)
-      (handler/site)
-      (wrap-base-url)))
+(def app (noir-middleware/app-handler [home-routes app-routes]))
