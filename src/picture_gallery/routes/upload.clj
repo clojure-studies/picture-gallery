@@ -11,7 +11,8 @@
             [clojure.java.io :as io]
             [ring.util.response :refer [file-response]]
             [noir.util.anti-forgery :refer [anti-forgery-field]]
-            [noir.util.route :refer [restricted]])
+            [noir.util.route :refer [restricted]]
+            [picture-gallery.models.image :as image])
   (:import [java.io File FileInputStream FileOutputStream]
            [java.awt.image AffineTransformOp BufferedImage]
            java.awt.RenderingHints
@@ -67,6 +68,7 @@
       (try
         (noir.io/upload-file (gallery-path) file :create-path? true)
         (save-thumbnail file)
+        (image/create (session/get :user) filename)
         (image {:height "150px"}
                (str "/img/" (session/get :user) File/separator thumb-prefix (url-encode filename)))
         (catch Exception ex
