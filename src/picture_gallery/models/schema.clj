@@ -10,4 +10,3 @@
                    :db database-url})
 
 (def db {:connection-uri database-url})
-
