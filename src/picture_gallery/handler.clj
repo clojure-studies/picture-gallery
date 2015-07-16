@@ -3,6 +3,7 @@
             [compojure.route :as route]
             [picture-gallery.routes.home :refer [home-routes]]
             [noir.util.middleware :as noir-middleware]
+            [noir.session :as session]
             [picture-gallery.models.schema :as schema]
             [picture-gallery.routes.auth :refer [auth-routes]]
             [picture-gallery.routes.upload :refer [upload-routes]]))
@@ -17,8 +18,12 @@
   (route/resources "/")
   (route/not-found "Not Found"))
 
+(defn user-page [_]
+  (session/get :user))
+
 (def app (noir-middleware/app-handler
            [auth-routes
             home-routes
             upload-routes
-            app-routes]))
+            app-routes]
+           :access-rules [user-page]))
