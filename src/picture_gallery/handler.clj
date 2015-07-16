@@ -4,13 +4,11 @@
             [picture-gallery.routes.home :refer [home-routes]]
             [noir.util.middleware :as noir-middleware]
             [picture-gallery.models.schema :as schema]
-            [migratus.core :as migratus]
             [picture-gallery.routes.auth :refer [auth-routes]]
             [picture-gallery.routes.upload :refer [upload-routes]]))
 
 (defn init []
   (println "picture-gallery is starting"))
-  (migratus/migrate schema/migratus-cfg)
 
 (defn destroy []
   (println "picture-gallery is shutting down"))
