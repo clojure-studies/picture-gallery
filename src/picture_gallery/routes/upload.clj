@@ -12,7 +12,8 @@
             [ring.util.response :refer [file-response]]
             [noir.util.anti-forgery :refer [anti-forgery-field]]
             [noir.util.route :refer [restricted]]
-            [picture-gallery.models.image :as image])
+            [picture-gallery.models.image :as image]
+            [picture-gallery.util :refer :all])
   (:import [java.io File FileInputStream FileOutputStream]
            [java.awt.image AffineTransformOp BufferedImage]
            java.awt.RenderingHints
@@ -38,7 +39,6 @@
     (.filter transform-op img (BufferedImage. width height (.getType img)))))
 
 (def thumb-size 150)
-(def thumb-prefix "thumb_")
 
 (defn scale-image [file]
   (let [img
@@ -56,11 +56,6 @@
       "png"
       (File. (str path thumb-prefix filename)))))
 
-(def galleries "public/galleries")
-
-(defn gallery-path []
-  (str galleries File/separator (session/get :user)))
-
 (defn handle-upload [{:keys [filename] :as file}]
   (upload-page
     (if (empty? filename)
@@ -70,7 +65,7 @@
         (save-thumbnail file)
         (image/create (session/get :user) filename)
         (image {:height "150px"}
-               (str "/img/" (session/get :user) File/separator thumb-prefix (url-encode filename)))
+               (thumb-uri (session/get :user) filename))
         (catch Exception ex
           (str "error uploading file " (.getMessage ex)))))))
 
