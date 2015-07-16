@@ -2,7 +2,9 @@
 /lib
 /classes
 /checkouts
+/public
 pom.xml
+.nrepl-port
 *.jar
 *.class
 .lein-*

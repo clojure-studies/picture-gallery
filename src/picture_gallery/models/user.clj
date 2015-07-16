@@ -10,3 +10,6 @@
 
 (defn find-first [name]
   (sql/query db ["SELECT * FROM users WHERE name=? LIMIT 1" name] :result-set-fn first))
+
+(defn destroy [where-clause]
+  (sql/delete! db :users where-clause))

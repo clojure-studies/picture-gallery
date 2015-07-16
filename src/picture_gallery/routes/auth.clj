@@ -7,7 +7,8 @@
             [noir.response :as resp]
             [noir.validation :as vali]
             [noir.util.crypt :as crypt]
-            [picture-gallery.models.user :as user]))
+            [picture-gallery.models.user :as user]
+            [noir.util.anti-forgery :refer [anti-forgery-field]]))
 
 (defn valid? [id pass pass1]
   (vali/rule (vali/has-value? id)
@@ -32,6 +33,7 @@
 (defn registration-page [& [id]]
   (layout/base
     (form-to [:post "/register"]
+             (anti-forgery-field)
              (control :id
                       (label "user-id" "user id")
                       (text-field {:tabindex 1} "id" id))
@@ -64,6 +66,7 @@
 
 (defn handle-login [id pass]
   (let [user (user/find-first id)]
+    (println user)
     (if (and user (crypt/compare pass (:pass user)))
       (session/put! :user id)))
   (resp/redirect "/"))

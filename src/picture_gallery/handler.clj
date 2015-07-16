@@ -5,7 +5,8 @@
             [noir.util.middleware :as noir-middleware]
             [picture-gallery.models.schema :as schema]
             [migratus.core :as migratus]
-            [picture-gallery.routes.auth :refer [auth-routes]]))
+            [picture-gallery.routes.auth :refer [auth-routes]]
+            [picture-gallery.routes.upload :refer [upload-routes]]))
 
 (defn init []
   (println "picture-gallery is starting"))
@@ -21,4 +22,5 @@
 (def app (noir-middleware/app-handler
            [auth-routes
             home-routes
+            upload-routes
             app-routes]))

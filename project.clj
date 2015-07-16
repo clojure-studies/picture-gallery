@@ -10,7 +10,7 @@
                  [environ "1.0.0"]
                  [migratus "0.8.1"]
                  [heroku-database-url-to-jdbc "0.2.2"]
-                 [lib-noir "0.7.6"]]
+                 [lib-noir "0.9.9"]]
   :plugins [[lein-ring "0.8.12"]]
   :ring {:handler picture-gallery.handler/app
          :init picture-gallery.handler/init
