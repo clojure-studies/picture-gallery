@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS images(userid VARCHAR(32), name VARCHAR(100));
