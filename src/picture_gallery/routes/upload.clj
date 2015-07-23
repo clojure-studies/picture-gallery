@@ -89,4 +89,4 @@
   (GET "/upload" [info] (restricted (upload-page info)))
   (POST "/upload" [file] (restricted (handle-upload file)))
   (GET "/img/:user-id/:file-name" [user-id file-name] (serve-file user-id file-name))
-  (POST "/delete" [names] (restricted (delete-images names)))
+  (POST "/delete" [names] (restricted (delete-images names))))

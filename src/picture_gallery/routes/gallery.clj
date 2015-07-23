@@ -5,6 +5,7 @@
              :refer [thumb-prefix image-uri thumb-uri]]
             [picture-gallery.models.image :as image]
             [noir.session :as session]
+            [hiccup.page :refer [include-js]]
             [hiccup.form :refer [check-box]]))
 
 (defn thumbnail-link [{:keys [userid name]}]
