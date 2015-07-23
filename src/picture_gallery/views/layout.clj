@@ -3,7 +3,8 @@
             [hiccup.element :refer [link-to]]
             [hiccup.form :refer :all]
             [noir.session :as session]
-            [noir.util.anti-forgery :refer [anti-forgery-field]]))
+            [noir.util.anti-forgery :refer [anti-forgery-field]]
+            [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]))
 
 (defn base [& content]
   (html5
@@ -11,6 +12,8 @@
      [:title "Welcome to picture-gallery"]
      (include-css "/css/screen.css")]
      (include-js "//code.jquery.com/jquery-2.0.2.min.js")
+     [:meta {:name "csrf-param" :content "__anti-forgery-token"}]
+     [:meta {:name "csrf-token" :content *anti-forgery-token*}]
     [:body content]))
 
 (defn make-menu [& items]

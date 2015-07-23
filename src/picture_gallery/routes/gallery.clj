@@ -35,5 +35,6 @@
 
 (defroutes gallery-routes
   (GET "/gallery/:userid" [userid]
-       (include-js "/js/gallery.js")
-       (layout/common (display-gallery userid))))
+       (layout/common
+         (include-js "/js/gallery.js")
+         (display-gallery userid))))

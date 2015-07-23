@@ -7,10 +7,12 @@ function deleteImages() {
             selectedIds.push($(this).attr('id'));
         });
     if (selectedIds.length < 1) alert("no images selected");
-    else
+    else {
+        var params = {names: selectedIds};
+        params[$('meta[name="csrf-param"]').attr('content')] = $('meta[name="csrf-token"]').attr('content')
         $.post(
             "/delete",
-            {names: selectedIds},
+            params,
             function(response) {
                 var errors = $('<ul>');
                 $.each(response, function() {
@@ -30,6 +32,7 @@ function deleteImages() {
                     $('#error').empty().append(errors);
             },
             "json");
+    }
 }
 
 $(document).ready(function(){
