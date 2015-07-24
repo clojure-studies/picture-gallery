@@ -4,17 +4,9 @@
             [hiccup.form :refer :all]
             [noir.session :as session]
             [noir.util.anti-forgery :refer [anti-forgery-field]]
-            [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]))
-
-(defn base [& content]
-  (html5
-    [:head
-     [:title "Welcome to picture-gallery"]
-     (include-css "/css/screen.css")]
-     (include-js "//code.jquery.com/jquery-2.0.2.min.js")
-     [:meta {:name "csrf-param" :content "__anti-forgery-token"}]
-     [:meta {:name "csrf-token" :content *anti-forgery-token*}]
-    [:body content]))
+            [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
+            [ring.util.response :refer [content-type response]]
+            [compojure.response :refer [Renderable]]))
 
 (defn make-menu [& items]
   [:div (for [item items] [:div.menuitem item])])
@@ -31,8 +23,31 @@
 
 (defn user-menu [user]
   (make-menu
+    (link-to "/" "home")
     (link-to "/upload" "upload images")
-    (link-to "/logout" (str "logout " user))))
+    (link-to "/logout" (str "logout " user))
+    (link-to "/delete-account" "delete account")))
+
+(defn utf-8-response [html]
+  (content-type (response html) "text/html; charset=utf-8"))
+
+(deftype RenderablePage [content]
+  Renderable
+    (render [this request]
+      (utf-8-response
+        (html5
+          [:head
+            [:title "Welcome to picture-gallery"]
+            (include-css "/css/screen.css")
+            [:script {:type "text/javascript"}
+              (str "var context=\"" (:context request) "\";")]
+            (include-js "//code.jquery.com/jquery-2.0.2.min.js")]
+            [:meta {:name "csrf-param" :content "__anti-forgery-token"}]
+            [:meta {:name "csrf-token" :content *anti-forgery-token*}]
+          [:body content]))))
+
+(defn base [& content]
+  (RenderablePage. content))
 
 (defn common [& content]
   (base

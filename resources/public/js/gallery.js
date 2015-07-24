@@ -11,7 +11,7 @@ function deleteImages() {
         var params = {names: selectedIds};
         params[$('meta[name="csrf-param"]').attr('content')] = $('meta[name="csrf-token"]').attr('content')
         $.post(
-            "/delete",
+            context + "/delete",
             params,
             function(response) {
                 var errors = $('<ul>');

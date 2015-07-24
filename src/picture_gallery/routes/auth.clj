@@ -8,7 +8,11 @@
             [noir.validation :as vali]
             [noir.util.crypt :as crypt]
             [picture-gallery.models.user :as user]
-            [noir.util.anti-forgery :refer [anti-forgery-field]]))
+            [picture-gallery.models.image :as image]
+            [picture-gallery.util :refer [gallery-path]]
+            [noir.util.anti-forgery :refer [anti-forgery-field]]
+            [picture-gallery.routes.upload :refer [delete-image]]
+            [noir.util.route :refer [restricted]]))
 
 (defn valid? [id pass pass1]
   (vali/rule (vali/has-value? id)
@@ -74,12 +78,33 @@
   (session/clear!)
   (resp/redirect "/"))
 
+(defn delete-account-page []
+  (layout/common
+    (form-to [:post "/confirm-delete"]
+      (anti-forgery-field)
+      (submit-button "delete account"))
+    (form-to [:get "/"]
+      (submit-button "cancel"))))
+
+(defn handle-confirm-delete []
+  (let [user (session/get :user)]
+    (doseq [{:keys [name]} (image/by-user user)]
+      (delete-image user name))
+    ;(clojure.java.io/delete-file (gallery-path))
+    (user/destroy ["name=?", user]))
+  (session/clear!)
+  (resp/redirect "/"))
+
 (defroutes auth-routes
   (GET "/register" []
-       (registration-page))
+        (registration-page))
   (POST "/register" [id pass pass1]
         (handle-registration id pass pass1))
   (POST "/login" [id pass]
         (handle-login id pass))
   (GET "/logout" []
-       (handle-logout)))
+        (handle-logout))
+  (GET "/delete-account" []
+        (restricted (delete-account-page)))
+  (POST "/confirm-delete" []
+        (restricted (handle-confirm-delete))))
